@@ -6,7 +6,7 @@ const Banner = () => {
     const { login } = useContext(AuthContext);
     const [loggedIn, setLoggedIn] = useState(false);
     const { updateUser } = useContext(UserContext);
-    const [formData, setFormData] = useState({ identity: '', password: '' });
+    const [formData, setFormData] = useState({ identifiant: '', password: '' });
     const [error, setError] = useState('');
 
     const handleChange = (e) => {
@@ -19,11 +19,12 @@ const Banner = () => {
             const response = await login(formData);
             const { token, user } = response;
             localStorage.setItem('token', token);
+            console.log(user)
             updateUser(user);
             setLoggedIn(true);
         } catch (error) {
             console.error('Error logging in:', error);
-            setError(error.response?.data?.message || 'An error occurred. Please try again.');
+            setError(error.response?.data?.error || 'An error occurred. Please try again.');
         }
     };
 
@@ -48,8 +49,8 @@ const Banner = () => {
                         </span>
                         <input
                             type="text"
-                            name="identity"
-                            value={formData.identity}
+                            name="identifiant"
+                            value={formData.identifiant}
                             onChange={handleChange}
                             required
                             aria-label="Enter your Identification Number"

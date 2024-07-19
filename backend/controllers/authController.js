@@ -1,4 +1,4 @@
-const User = require('../database/models/User');
+const { Hopital, User } = require('../database/models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const SECRET_KEY = '52e4d52f23d204d418ad64c33c095051b2430322a2a47d8b378aede350661a21bf0c3c33991a998ff5314bc053d3ce66';
@@ -6,10 +6,10 @@ const validator = require('validator'); // Pour valider l'email et d'autres cham
 
 exports.creer_hopital = async (req, res) => {
     try {
-        const { nom_hopital, telephone, date_de_creation, adresse, codepostal, email, password, status } = req.body;
+        const { nom_hopital, telephone, date_de_creation, adresse, codepostal, email, password } = req.body;
 
         // Validation des champs
-        if (!nom_hopital || !telephone || !date_de_creation || !adresse || !codepostal || !email || !password || !status) {
+        if (!nom_hopital || !telephone || !date_de_creation || !adresse || !codepostal || !email || !password) {
             return res.status(400).send({ error: "Tous les champs sont obligatoires" });
         }
 
@@ -29,32 +29,31 @@ exports.creer_hopital = async (req, res) => {
         }
 
         // Vérification des doublons d'email et de nom de l'hôpital
-        const existingUser = await User.findOne({ $or: [{ email }, { nom_hopital }] });
-        if (existingUser) {
-            return res.status(400).send({ error: "L'email ou le nom de l'hôpital est déjà utilisé" });
+        const existingHopital = await Hopital.findOne({ $or: [{ email }, { telephone }] });
+        if (existingHopital) {
+            return res.status(400).send({ error: "L'email ou le numéro de téléphone est déjà utilisé" });
         }
 
         // Hachage du mot de passe
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Création de l'utilisateur
-        const user = new User({
+        // Création de l'hôpital
+        const hopital = new Hopital({
             nom_hopital,
             telephone,
             date_de_creation,
             adresse,
             codepostal,
             email,
-            password: hashedPassword,
-            status,
+            password: hashedPassword
         });
 
-        await user.save();
-        res.status(201).send({ message: 'Utilisateur créé avec succès' });
+        await hopital.save();
+        res.status(201).send({ message: 'Hôpital créé avec succès', hopital });
     } catch (err) {
         console.error(err);
         res.status(500).send({
-            error: "Échec de la création de l'utilisateur en raison d'une erreur serveur"
+            error: "Échec de la création de l'hôpital en raison d'une erreur serveur"
         });
     }
 };
