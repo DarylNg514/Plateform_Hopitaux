@@ -130,15 +130,15 @@ const ProfilHopital = () => {
             </CardContainer>) : (
             <CardContainer theme={ theme }>
                 <CardImage 
-                    src={data.freelanceData.picture}
+                    src={data.image}
                     alt="freelance"
                     onError={handleError}>
                 </CardImage>
                 <CardInfos>
-                    <CardTitle  theme={ theme }>{ data.freelanceData.name }</CardTitle>
-                    <CardLabel  theme={ theme }>{data.freelanceData.job}</CardLabel>
+                    <CardTitle  theme={ theme }>{ data.nom_hopital }</CardTitle>
+                    <CardLabel  theme={ theme }>{data.email}</CardLabel>
                     <Competence> 
-                    {data.freelanceData.skills.map((skill, index) =>(
+                    {data.adresse.map((skill, index) =>(
                         <Skill  theme={ theme }
                             key={index}>{ skill } 
                         </Skill>
@@ -152,7 +152,7 @@ const ProfilHopital = () => {
                         )}
                         {data.freelanceData.available ? 'Disponible Maintenant' : 'Indisponible pour l\'instant'}
                     </Available>
-                    <Tarif theme={ theme }>{data.freelanceData.tjm}€ / jour</Tarif>
+                    <Tarif theme={ theme }> 24/24 heures 7/7 jour</Tarif>
                 </CardInfos>
                 <Ville  theme={ theme }>{ data.freelanceData.location }</Ville>
             </CardContainer>
