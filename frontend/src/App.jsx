@@ -1,15 +1,20 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css'
-import Banner from './components/Banner'
-import Header from './components/Header'
 import { AuthProvider, UserProvider } from './components/utils/context'
+import Home from './pages/Home'
+import AccueilHopital from './components/AccueilHopital'
 
 function App() {
 
     return (
       <AuthProvider>
         <UserProvider>
-          <Header/>
-          <Banner/>
+          <BrowserRouter>
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/Accueil_Hopital' element={<AccueilHopital/>} />
+            </Routes>
+          </BrowserRouter>
         </UserProvider>
       </AuthProvider>
     )
