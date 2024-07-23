@@ -4,6 +4,27 @@ const bcrypt = require('bcryptjs');
 const SECRET_KEY = '52e4d52f23d204d418ad64c33c095051b2430322a2a47d8b378aede350661a21bf0c3c33991a998ff5314bc053d3ce66';
 const validator = require('validator'); // Pour valider l'email et d'autres champs
 
+exports.login = async (req, res) => {
+    try {
+        const user = await User.findOne({ identifiant: req.body.identifiant });
+        if (!user) {
+            return res.status(400).send({ error: 'Utilisateur non trouvé' });
+        }
+
+        const validPassword = await bcrypt.compare(req.body.password, user.password);
+        if (!validPassword) {
+            return res.status(400).send({ error: 'Mot de passe incorrect' });
+        }
+
+        const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: '30d' });
+        res.send({
+            token, user
+        });
+    } catch (err) {
+        res.status(400).send({ error: 'Échec de la connexion' });
+    }
+};
+
 exports.creer_hopital = async (req, res) => {
     try {
         const { nom_hopital, telephone, date_de_creation, adresse, codepostal, email, password } = req.body;
@@ -37,9 +58,13 @@ exports.creer_hopital = async (req, res) => {
         // Hachage du mot de passe
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Génération de l'identifiant basé sur le nom de l'hôpital
+        const identifiant_hopital = nom_hopital.toLowerCase().replace(/[^a-z0-9]/g, '');
+
         // Création de l'hôpital
         const hopital = new Hopital({
             nom_hopital,
+            identifiant: identifiant_hopital,
             telephone,
             date_de_creation,
             adresse,
@@ -58,23 +83,66 @@ exports.creer_hopital = async (req, res) => {
     }
 };
 
-exports.login = async (req, res) => {
+// Fonction de récupération de tous les hôpitaux
+exports.lister_hopitaux = async (req, res) => {
     try {
-        const user = await User.findOne({ identifiant: req.body.identifiant });
-        if (!user) {
-            return res.status(400).send({ error: 'Utilisateur non trouvé' });
-        }
-
-        const validPassword = await bcrypt.compare(req.body.password, user.password);
-        if (!validPassword) {
-            return res.status(400).send({ error: 'Mot de passe incorrect' });
-        }
-
-        const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: '30d' });
-        res.send({
-            token, user
-        });
+        const hopitaux = await Hopital.find();
+        res.status(200).send(hopitaux);
     } catch (err) {
-        res.status(400).send({ error: 'Échec de la connexion' });
+        res.status(500).send({ error: "Erreur lors de la récupération des hôpitaux" });
+    }
+};
+
+// Fonction de récupération d'un hôpital par son ID
+exports.get_hopital = async (req, res) => {
+    try {
+        const hopital = await Hopital.findById(req.params.id);
+        if (!hopital) {
+            return res.status(404).send({ error: "Hôpital non trouvé" });
+        }
+        res.status(200).send(hopital);
+    } catch (err) {
+        res.status(500).send({ error: "Erreur lors de la récupération de l'hôpital" });
+    }
+};
+
+// Fonction de mise à jour d'un hôpital
+exports.update_hopital = async (req, res) => {
+    try {
+        const updates = req.body;
+        if (updates.email && !validator.isEmail(updates.email)) {
+            return res.status(400).send({ error: "L'email n'est pas valide" });
+        }
+
+        if (updates.telephone && !validator.isMobilePhone(updates.telephone, 'en-CA')) {
+            return res.status(400).send({ error: "Le numéro de téléphone n'est pas valide" });
+        }
+
+        if (updates.codepostal && !validator.isPostalCode(updates.codepostal, 'CA')) {
+            return res.status(400).send({ error: "Le code postal n'est pas valide" });
+        }
+
+        const hopital = await Hopital.findByIdAndUpdate(req.params.id, updates, { new: true, runValidators: true });
+        if (!hopital) {
+            return res.status(404).send({ error: "Hôpital non trouvé" });
+        }
+
+        res.status(200).send(hopital);
+    } catch (err) {
+        res.status(500).send({ error: "Erreur lors de la mise à jour de l'hôpital" });
+    }
+};
+
+// Fonction de suppression d'un hôpital
+exports.delete_hopital = async (req, res) => {
+    try {
+        const hopital = await Hopital.findByIdAndDelete(req.params.id);
+        if (!hopital) {
+            return res.status(404).send({ error: "Hôpital non trouvé" });
+        }
+
+        res.status(200).send({ message: "Hôpital supprimé avec succès" });
+    } catch (err) {
+        res.status(500).send({ error: "Erreur lors de la suppression de l'hôpital" });
     }
 };
