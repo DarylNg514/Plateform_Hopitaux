@@ -4,7 +4,7 @@ import { ThemeContext } from '../context';
 import axios from 'axios';
 
 export const useAuth = () => {
-    return useContext(AuthContext);
+  return useContext(AuthContext);
 };
 
 
@@ -22,24 +22,25 @@ export function useFetch(url, method = 'GET', data = {}) {
         switch (method.toUpperCase()) {
           case 'GET':
             response = await axios.get(url);
-            response= response.json();
+            console.log(response.data)
+            response = response.data;
             break;
           case 'POST':
             response = await axios.post(url, data);
-            response = response.json();
+            response = response.data;
             break;
           case 'PUT':
             response = await axios.put(url, data);
-            response = response.json();
+            response = response.data;
             break;
           case 'DELETE':
             response = await axios.delete(url);
-            response = response.json();
+            response = response.data;
             break;
           default:
             throw new Error(`Unsupported method: ${method}`);
         }
-        setResponse(response.data);
+        setResponse(response);
       } catch (err) {
         console.log(err);
         setError(true);
@@ -55,6 +56,6 @@ export function useFetch(url, method = 'GET', data = {}) {
 }
 
 export const useTheme = () => {
-    const { theme, toggleTheme } = useContext(ThemeContext);
-    return { theme, toggleTheme }
+  const { theme, toggleTheme } = useContext(ThemeContext);
+  return { theme, toggleTheme }
 }

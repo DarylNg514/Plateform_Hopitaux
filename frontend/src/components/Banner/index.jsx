@@ -6,7 +6,7 @@ const Banner = () => {
     const { login } = useContext(AuthContext);
     const [loggedIn, setLoggedIn] = useState(false);
     const { updateUser } = useContext(UserContext);
-    const [formData, setFormData] = useState({ identifiant: '', password: '' });
+    const [formData, setFormData] = useState({ identifiant: '', password: '', type: 'admin' });
     const [error, setError] = useState('');
 
     const handleChange = (e) => {
@@ -29,7 +29,7 @@ const Banner = () => {
     };
 
     if (loggedIn) {
-        return <Navigate to="/user" />;
+        return <Navigate to="/Accueil_Hopital" />;
     }
 
     return (
@@ -42,6 +42,20 @@ const Banner = () => {
 
             <div className="wrapper_login">
                 <h2>Member Login</h2>
+                <div className="login-toggle">
+                    <button
+                        className={formData.type === 'admin' ? 'active' : ''}
+                        onClick={() => setFormData({ ...formData, type: 'user' })}
+                    >
+                        Admin
+                    </button>
+                    <button
+                        className={formData.type === 'hopital' ? 'active' : ''}
+                        onClick={() => setFormData({ ...formData, type: 'hopital' })}
+                    >
+                        Hopital
+                    </button>
+                </div>
                 <form onSubmit={handleSubmit}>
                     <div className="inputBox">
                         <span className="icon">

@@ -9,7 +9,7 @@ exports.login = async (req, res) => {
         const { identifiant, password, type } = req.body;
         let user;
 
-        if (type === 'user') {
+        if (type === 'admin') {
             user = await User.findOne({ identifiant });
         } else if (type === 'hopital') {
             user = await Hopital.findOne({ identifiant });

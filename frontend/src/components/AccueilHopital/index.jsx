@@ -10,7 +10,7 @@ const CardContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    background-color: ${({theme}) => theme === 'light' ? colors.backgroundLight : colors.backgroundDark};
+    background-color: ${({ theme }) => theme === 'light' ? colors.backgroundLight : colors.backgroundDark};
     border-radius: 30px;
     height: 400px;
     margin: 60px 200px 60px 200px;
@@ -37,11 +37,14 @@ const AccueilHopital = () => {
     const [error, setError] = useState(false)
     const { theme } = useTheme()
 
-    const { Loading, response, errorLoading } = useFetch(`http://localhost:5000/auth/get_all_hopital`)
-
+    const { Loading, response, errorLoading } = useFetch(`http://localhost:5000/auth/hopitaux`)
+    console.log(response)
+    console.log(Loading)
+    console.log(errorLoading)
 
     useEffect(() => {
         try {
+            console.log(response)
             setError(errorLoading)
             setIsLoading(Loading)
             setData(response);
@@ -51,8 +54,8 @@ const AccueilHopital = () => {
             setIsLoading(false);
         }
 
-    }, [ Loading, response, errorLoading, setData, setIsLoading, setError]);
-    
+    }, [Loading, response, errorLoading, setData, setIsLoading, setError]);
+
     if (error) {
         return <InfoError>Oups il y a eu un problème...</InfoError>
     }
@@ -72,18 +75,18 @@ const AccueilHopital = () => {
                     </LoaderWrapper>
                 </CardContainer>
             ) : (
-            <CardsContainer>
-                {data.map((profile, index) => (
-                <Card
-                    key={`${profile.id}-${index}`}
-                    id= {profile.id}
-                    label={profile.job}
-                    title={profile.name}
-                    picture={profile.picture}
-                />
-                ))}
-            </CardsContainer>
-            ) }
+                <CardsContainer>
+                    {data.map((profile, index) => (
+                        <Card
+                            key={`${profile.id}-${index}`}
+                            id={profile.id}
+                            label={profile.job}
+                            title={profile.name}
+                            picture={profile.picture}
+                        />
+                    ))}
+                </CardsContainer>
+            )}
         </>
     )
 }
