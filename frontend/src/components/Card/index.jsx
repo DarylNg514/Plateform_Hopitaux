@@ -52,7 +52,7 @@ function Card({ id, label, title, picture }) {
 
 
   return (
-    <LinkStyled to={`/Profile/${id}`} id={id}>
+    <LinkStyled to={`/ProfileHopital/${id}`} id={id}>
       <CardWrapper theme={theme} >
         <CardLabel>{label}</CardLabel>
         <CardImage
