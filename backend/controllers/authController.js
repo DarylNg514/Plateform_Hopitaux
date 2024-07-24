@@ -6,20 +6,28 @@ const validator = require('validator'); // Pour valider l'email et d'autres cham
 
 exports.login = async (req, res) => {
     try {
-        const user = await User.findOne({ identifiant: req.body.identifiant });
-        if (!user) {
-            return res.status(400).send({ error: 'Utilisateur non trouvé' });
+        const { identifiant, password, type } = req.body;
+        let user;
+
+        if (type === 'user') {
+            user = await User.findOne({ identifiant });
+        } else if (type === 'hopital') {
+            user = await Hopital.findOne({ identifiant });
+        } else {
+            return res.status(400).send({ error: 'Type de connexion non valide' });
         }
 
-        const validPassword = await bcrypt.compare(req.body.password, user.password);
+        if (!user) {
+            return res.status(400).send({ error: 'Identifiant non trouvé' });
+        }
+
+        const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
             return res.status(400).send({ error: 'Mot de passe incorrect' });
         }
 
-        const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: '30d' });
-        res.send({
-            token, user
-        });
+        const token = jwt.sign({ id: user._id, type }, SECRET_KEY, { expiresIn: '30d' });
+        res.send({ token, user });
     } catch (err) {
         res.status(400).send({ error: 'Échec de la connexion' });
     }
@@ -58,8 +66,16 @@ exports.creer_hopital = async (req, res) => {
         // Hachage du mot de passe
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Génération de l'identifiant basé sur le nom de l'hôpital
-        const identifiant_hopital = nom_hopital.toLowerCase().replace(/[^a-z0-9]/g, '');
+        // Génération de l'identifiant unique pour l'hôpital
+        const cleanName = nom_hopital.toLowerCase().replace(/[^a-z0-9]/g, '');
+        let identifiant_hopital;
+        let identifiantExists = true;
+
+        while (identifiantExists) {
+            const randomNumber = Math.floor(Math.random() * 10); // Génère un nombre aléatoire entre 0 et 9
+            identifiant_hopital = `${cleanName}${randomNumber}`;
+            identifiantExists = await Hopital.findOne({ identifiant: identifiant_hopital });
+        }
 
         // Création de l'hôpital
         const hopital = new Hopital({
