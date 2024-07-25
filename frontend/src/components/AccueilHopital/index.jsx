@@ -37,7 +37,7 @@ const AccueilHopital = () => {
     const [error, setError] = useState(false)
     const { theme } = useTheme()
 
-    const { Loading, response, errorLoading } = useFetch(`http://localhost:5000/auth/hopitaux`)
+    const { Loading, response, errorLoading } = useFetch(`http://localhost:5000/auth/hopitaux`, 'GET')
     console.log(response)
     console.log(Loading)
     console.log(errorLoading)
@@ -76,13 +76,13 @@ const AccueilHopital = () => {
                 </CardContainer>
             ) : (
                 <CardsContainer>
-                    {data.map((profile, index) => (
+                    {data.map((hopital, index) => (
                         <Card
-                            key={`${profile.id}-${index}`}
-                            id={profile.id}
-                            label={profile.job}
-                            title={profile.name}
-                            picture={profile.picture}
+                            key={`${hopital.id}-${index}`}
+                            id={hopital.id}
+                            label={hopital.nom_hopital}
+                            title={hopital.email}
+                            picture={hopital.picture}
                         />
                     ))}
                 </CardsContainer>
