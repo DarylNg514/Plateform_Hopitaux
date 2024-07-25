@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { AuthContext, UserContext } from "../utils/context";
 import { Navigate } from 'react-router-dom';
 
-const Banner = () => {
+const Connexion = () => {
     const { login } = useContext(AuthContext);
     const [loggedIn, setLoggedIn] = useState(false);
     const { updateUser } = useContext(UserContext);
@@ -102,4 +102,4 @@ const Banner = () => {
     );
 };
 
-export default Banner;
+export default Connexion;

@@ -1,4 +1,4 @@
-import Banner from "../../components/Banner";
+import Banner from "../../components/Connexion";
 import Header from "../../components/Header";
 
 

@@ -61,6 +61,10 @@ function Card({ id, label, title, picture }) {
           onError={handleError}
         />
         <CardTitle theme={theme}>{title}</CardTitle>
+
+        <button><ion-icon name="trash-outline"></ion-icon></button>
+        <button><ion-icon name="pencil-outline"></ion-icon></button>
+        <button><i class="bi bi-pencil-square"></i></button>
       </CardWrapper>
     </LinkStyled>
   )

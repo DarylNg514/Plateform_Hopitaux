@@ -39,8 +39,6 @@ const AccueilHopital = () => {
 
     const { Loading, response, errorLoading } = useFetch(`http://localhost:5000/auth/hopitaux`)
     console.log(response)
-    console.log(Loading)
-    console.log(errorLoading)
 
     useEffect(() => {
         try {
@@ -78,10 +76,10 @@ const AccueilHopital = () => {
                 <CardsContainer>
                     {data.map((profile, index) => (
                         <Card
-                            key={`${profile.id}-${index}`}
-                            id={profile.id}
-                            label={profile.job}
-                            title={profile.name}
+                            key={`${profile.identifiant}-${index}`}
+                            id={profile.identifiant}
+                            label={profile.nom_hopital}
+                            title={profile.email}
                             picture={profile.picture}
                         />
                     ))}

@@ -9,7 +9,7 @@ export const useAuth = () => {
 
 
 export function useFetch(url, method = 'GET', data = {}) {
-  const [response, setResponse] = useState({});
+  const [response, setResponse] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -22,35 +22,39 @@ export function useFetch(url, method = 'GET', data = {}) {
         switch (method.toUpperCase()) {
           case 'GET':
             response = await axios.get(url);
-            console.log(response.data)
+            console.log('Get request: ', response)
             response = response.data;
+            setResponse(response);
             break;
           case 'POST':
             response = await axios.post(url, data);
             response = response.data;
+            setResponse(response);
             break;
           case 'PUT':
             response = await axios.put(url, data);
             response = response.data;
+            setResponse(response);
             break;
           case 'DELETE':
             response = await axios.delete(url);
             response = response.data;
+            setResponse(response);
             break;
           default:
             throw new Error(`Unsupported method: ${method}`);
         }
-        setResponse(response);
       } catch (err) {
         console.log(err);
         setError(true);
       } finally {
         setLoading(false);
       }
+      console.log('fetch request: ', response)
     }
 
     fetchData();
-  }, [url, method, data]);
+  }, [url, method, data, response]);
 
   return { isLoading, response, error };
 }
