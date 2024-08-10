@@ -76,11 +76,11 @@ const AccueilHopital = () => {
                 <CardsContainer>
                     {data.map((hopital, index) => (
                         <Card
-                            key={`${profile.identifiant}-${index}`}
-                            id={profile.identifiant}
-                            label={profile.nom_hopital}
-                            title={profile.email}
-                            picture={profile.picture}
+                            key={`${hopital.identifiant}-${index}`}
+                            id={hopital.identifiant}
+                            label={hopital.nom_hopital}
+                            title={hopital.email}
+                            picture={hopital.picture}
                         />
                     ))}
                 </CardsContainer>

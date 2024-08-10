@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import colors from '../utils/styles/colors'
-import { useTheme } from '../utils/hooks'
+import { useFetch, useTheme } from "../utils/hooks";
 import { LinkStyled } from '../utils/styles/Atoms'
 import DefaultPicture from '../../assets/images/profile.png';
 
@@ -10,7 +10,7 @@ const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 15px;
-  background-color: ${({theme}) => theme === 'light' ? colors.backgroundLight : colors.backgroundDark};
+  background-color: ${({ theme }) => theme === 'light' ? colors.backgroundLight : colors.backgroundDark};
   justify-content: space-around;
   border-radius: 30px;
   width: 300px;
@@ -50,6 +50,27 @@ function Card({ id, label, title, picture }) {
     event.target.src = DefaultPicture
   }
 
+  const handleEdit = () => {
+    // Code pour rediriger vers la page de modification ou ouvrir une modal de modification
+    console.log(`Modifier l'hôpital avec l'ID: ${id}`)
+    // Exemple : redirection vers la page de modification
+    window.location.href = `/edit-hopital/${id}`;
+  }
+
+  const handleDelete = async () => {
+    try {
+      const response = useFetch(`http://localhost:5000/auth//hopital/:id`, 'DELETE')
+      if (response.ok) {
+        console.log(`Hôpital avec l'ID: ${id} supprimé`)
+        // Code pour mettre à jour l'interface utilisateur après la suppression
+        window.location.reload(); // Recharger la page pour actualiser la liste
+      } else {
+        console.error('Erreur lors de la suppression de l\'hôpital')
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l\'hôpital', error)
+    }
+  }
 
   return (
     <LinkStyled to={`/ProfileHopital/${id}`} id={id}>
@@ -62,9 +83,8 @@ function Card({ id, label, title, picture }) {
         />
         <CardTitle theme={theme}>{title}</CardTitle>
 
-        <button><ion-icon name="trash-outline"></ion-icon></button>
-        <button><ion-icon name="pencil-outline"></ion-icon></button>
-        <button><i class="bi bi-pencil-square"></i></button>
+        <button onClick={handleDelete}><ion-icon name="trash-outline"></ion-icon></button>
+        <button onClick={handleEdit}><ion-icon name="pencil-outline"></ion-icon></button>
       </CardWrapper>
     </LinkStyled>
   )
