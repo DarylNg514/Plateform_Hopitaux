@@ -103,6 +103,7 @@ exports.creer_hopital = async (req, res) => {
 exports.lister_hopitaux = async (req, res) => {
     try {
         const hopitaux = await Hopital.find();
+        console.log('Je suis dans la fonction hopitaux: ', hopitaux)
         res.status(200).send(hopitaux);
     } catch (err) {
         res.status(500).send({ error: "Erreur lors de la récupération des hôpitaux" });

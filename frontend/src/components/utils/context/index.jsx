@@ -85,16 +85,26 @@ export const ThemeContext = createContext();
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState('light')
   const toggleTheme = () => {
+<<<<<<< HEAD
     setTheme(theme === 'light' ? 'dark' : 'light')
+=======
+      setTheme(theme === 'light' ? 'dark' : 'light')
+>>>>>>> 853b2e262cd1fc6df96740bbb26d03b72eea7242
   }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
+<<<<<<< HEAD
+=======
+        {children}
+>>>>>>> 853b2e262cd1fc6df96740bbb26d03b72eea7242
+    </ThemeContext.Provider >
   )
 }
 
 ThemeProvider.propTypes = {
-  children: PropTypes.node,
+<<<<<<< HEAD
+=======
+  children: PropTypes.node.isRequired,
+>>>>>>> 853b2e262cd1fc6df96740bbb26d03b72eea7242
 };

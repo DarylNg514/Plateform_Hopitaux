@@ -6,18 +6,19 @@ import AccueilHopital from './components/AccueilHopital';
 
 function App() {
   return (
-    <AuthProvider>
-      <UserProvider>
-        <ThemeProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/Accueil_Hopital' element={<AccueilHopital />} />
-            </Routes>
-          </BrowserRouter>
-        </ThemeProvider>
-      </UserProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <UserProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='/Accueil_Hopital' element={<AccueilHopital />} />
+              </Routes>
+            </BrowserRouter>      
+        </UserProvider>
+      </AuthProvider>
+    </ThemeProvider>
+    
   );
 }
 

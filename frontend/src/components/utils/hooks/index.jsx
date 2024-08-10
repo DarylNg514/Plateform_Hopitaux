@@ -45,16 +45,18 @@ export function useFetch(url, method = 'GET', data = {}) {
             throw new Error(`Unsupported method: ${method}`);
         }
         setResponse(response.data);
+
       } catch (err) {
         console.log(err);
         setError(true);
       } finally {
         setLoading(false);
       }
+      console.log('fetch request: ', response)
     }
 
     fetchData();
-  }, [url, method, data]);
+  }, [url, method, data, response]);
 
   return { isLoading, response, error };
 }
