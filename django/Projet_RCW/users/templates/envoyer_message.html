@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Envoyer un Message</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/creer.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="#"><img src="http://tfgms.com/sandbox/dailyui/logo-1.png" alt="Authentic Collection"></a></h1>
+        </header>
+        <h1 class="text-center">Envoyer un Message</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if error_message %}
+            <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+
+        {% if debug_info %}
+            <div class="alert alert-warning">
+                <strong>Debug Information:</strong> {{ debug_info }}
+            </div>
+        {% endif %}
+
+        <form class="registration-form" method="POST">
+            {% csrf_token %}
+            <label class="col-one-half">
+                <span class="label-text">Destinataire</span>
+                <select name="receiver_id" id="receiver_id">
+                    {% for receiver in receivers %}
+                        <option value="{{ receiver.id }}">
+                            {% if receiver.name %}
+                                {{ receiver.name }}
+                            {% elif receiver.nom %}
+                                {{ receiver.nom }}
+                            {% else %}
+                                {{ receiver.nom_hopital }}
+                            {% endif %}
+                            ({{ receiver.role }})
+                        </option>
+                    {% endfor %}
+                </select>
+                <input type="hidden" name="receiver_type" value="{{ receivers.0.type }}">
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Contenu</span>
+                <textarea name="content" rows="4" required></textarea>
+            </label>
+
+            <div class="text-center">
+                <button class="submit" name="send_message">Envoyer</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

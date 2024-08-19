@@ -24,8 +24,21 @@ def login(request):
             request.session['token'] = token
             request.session['role'] = user['role']
             request.session['user_id'] = user['_id']
-
-            return redirect('home')
+            if user['role'] == 'admin':
+                return redirect('home')
+            elif user['role'] == 'hopital': 
+                return redirect('get_all_medecins')
+            elif user['role'] == 'medecin':
+                return redirect('profil_medecin')
+            elif user['role'] == 'infirmier':
+                return redirect('profil_infirmier')
+            elif user['role'] == 'personnel':
+                return redirect('profil_personnel')
+            elif user['role'] == 'patient':
+                return redirect('profil_patient')
+            else:
+                None
+                
         else:
             error_message = response.json().get('error')
             return render(request, 'login.html', {'error_message': error_message})

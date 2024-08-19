@@ -74,7 +74,6 @@ const infirmierSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true },
     address: { type: String, required: true },
-    specialty: { type: String, required: true },
     availability: [{ day: String, hours: String }],
     password: { type: String, required: true },
     Hopital: { type: mongoose.Schema.Types.ObjectId, ref: 'Hopital', required: true },
@@ -92,6 +91,8 @@ const personnelSchema = new mongoose.Schema({
     phone: { type: String, required: true },
     address: { type: String, required: true },
     role: { type: String, required: true, default: 'personnel' },
+    poste: { type: String, required: true },
+    availability: [{ day: String, hours: String }],
     password: { type: String, required: true },
     Hopital: { type: mongoose.Schema.Types.ObjectId, ref: 'Hopital', required: true }
 }, {
@@ -106,7 +107,7 @@ const dossierSchema = new mongoose.Schema({
     Infirmier: { type: mongoose.Schema.Types.ObjectId, ref: 'Infirmier' },
     disease: { type: String, required: true },
     internal: { type: Boolean, required: true },
-    openDate: { type: Date, required: true },
+    openDate: { type: String, required: true },
     status: { type: String, required: true },
     Hopital: { type: mongoose.Schema.Types.ObjectId, ref: 'Hopital', required: true }
 }, {
@@ -151,7 +152,8 @@ const consultationSchema = new mongoose.Schema({
 const Consultation = mongoose.model("Consultation", consultationSchema);
 
 const rendezvousSchema = new mongoose.Schema({
-    date: { type: Date, required: true },
+    date: { type: String, required: true },
+    heures: { type: String, required: true },
     Patient: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
     Medecin: { type: mongoose.Schema.Types.ObjectId, ref: 'Medecin', required: true },
     Hopital: { type: mongoose.Schema.Types.ObjectId, ref: 'Hopital', required: true }
@@ -161,5 +163,56 @@ const rendezvousSchema = new mongoose.Schema({
 
 const Rendezvous = mongoose.model("Rendezvous", rendezvousSchema);
 
+
+
+const HoraireSchema = new mongoose.Schema({
+    day: {
+        type: String,
+        required: true
+    },
+    start_hour: {
+        type: String,
+        required: true
+    },
+    end_hour: {
+        type: String,
+        required: true
+    },
+    type: {
+        type: String,
+        enum: ['medecin', 'personnel', 'infirmier'],
+        required: true
+    },
+}, {
+    timestamps: true
+});
+
+
+const Horaire = mongoose.model("Horaire", HoraireSchema);
+
+const messageAdminSchema = new mongoose.Schema({
+    content: { type: String, required: true },
+    senderAdmin: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAdmin', required: true },
+    receiverHopital: { type: mongoose.Schema.Types.ObjectId, ref: 'Hopital', required: true },
+    isRead: { type: Boolean, default: false }
+}, {
+    timestamps: true
+});
+
+const MessageAdmin = mongoose.model('MessageAdmin', messageAdminSchema);
+
+const messageHopitalSchema = new mongoose.Schema({
+    content: { type: String, required: true },
+    senderHopital: { type: mongoose.Schema.Types.ObjectId, ref: 'Hopital', required: true },
+    receiverUser: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAdmin', required: true },
+    isRead: { type: Boolean, default: false }
+}, {
+    timestamps: true
+});
+
+const MessageHopital = mongoose.model('MessageHopital', messageHopitalSchema);
+
+
+
 // Exportation des modèles
-module.exports = { Hopital, User, Patient, Medecin, Infirmier, Personnel, Dossier, Lit, Department, Consultation, Rendezvous };
+module.exports = { Hopital, User, Patient, Medecin, Infirmier, Personnel, Dossier, Lit, Department, Consultation, Rendezvous, Horaire, MessageAdmin, MessageHopital };

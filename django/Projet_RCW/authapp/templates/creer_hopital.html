@@ -28,7 +28,7 @@
         {% if error_message %}
             <div class="alert alert-danger">{{ error_message }}</div>
         {% endif %}
-hopitaldedouala2, Mot de passe: 0000
+
         <form method="post" action="{% url 'creer_hopital' %}">
             {% csrf_token %}
             <label class="col-one-half">

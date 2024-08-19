@@ -8,12 +8,12 @@
         {% endfor %}
     {% endif %}
     <div class="products-header">
-        <div class="product-cell image">Dossiers</div>
         <div class="product-cell category">Patient</div>
         <div class="product-cell status-cell">Médecin</div>
         <div class="product-cell status-cell">Infirmier</div>
         <div class="product-cell sales">Maladie</div>
         <div class="product-cell sales">Statut</div>
+        <div class="product-cell sales">Interne</div>
         <div class="product-cell sales">Action</div>
     </div>
     {% for dossier in dossiers %}
@@ -27,17 +27,17 @@
         </button>
         <div class="product-cell image">
             <img src="https://tse4.mm.bing.net/th?id=OIP.UwP9KtmqzxLmbVYzDc8wZQHaHa&pid=Api&P=0&h=180" alt="product">
-            <span>{{ dossier._id }}</span>
+            <span>{{ dossier.Patient.name }}</span>
         </div>
-        <div class="product-cell category"><span class="cell-label">Patient:</span>{{ dossier.Patient.name }}</div>
         <div class="product-cell status-cell"><span class="cell-label">Médecin:</span>{{ dossier.Medecin.name }}</div>
-        <div class="product-cell status-cell"><span class="cell-label">Infirmier:</span>{{ dossier.Infirmier.name }}</div>
+        <div class="product-cell status-cell"><span class="cell-label">Infirmier:</span>{% if dossier.Infirmier %}{{ dossier.Infirmier.name }}{% else %}Aucun{% endif %}</div>
         <div class="product-cell sales"><span class="cell-label">Maladie:</span>{{ dossier.disease }}</div>
         <div class="product-cell sales"><span class="cell-label">Statut:</span>{{ dossier.status }}</div>
+        <div class="product-cell sales"><span class="cell-label">Statut:</span>{{ dossier.internal }}</div>
         <div class="product-cell actions">
-            {% if dossier._id %}
-            <a href="{% url 'update_dossier' dossier._id %}" class="btn btn-secondary"><i class="bi bi-save"></i></a>
-            <a href="{% url 'delete_dossier' dossier._id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+            {% if dossier.id %}
+            <a href="{% url 'update_dossier' dossier.id %}" class="btn btn-secondary"><i class="bi bi-save"></i></a>
+            <a href="{% url 'delete_dossier' dossier.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
             {% endif %}
         </div>
     </div>

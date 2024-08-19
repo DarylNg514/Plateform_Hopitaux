@@ -1,0 +1,46 @@
+{% extends 'index.html' %}
+{% block content %}
+{% load static %}
+<div class="products-area-wrapper tableView">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    <div class="products-header">
+        <div class="product-cell category">Patient</div>
+        <div class="product-cell status-cell">Médecin</div>
+        <div class="product-cell status-cell">Rendez-vous</div>
+        <div class="product-cell sales">Description</div>
+        <div class="product-cell sales">Statut</div>
+        <div class="product-cell sales">Paiement</div>
+        <div class="product-cell actions">Action</div>
+    </div>
+    {% for consultation in consultations %}
+    <div class="products-row">
+        <button class="cell-more-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical">
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="12" cy="5" r="1"></circle>
+                <circle cx="12" cy="19" r="1"></circle>
+            </svg>
+        </button>
+        <div class="product-cell image">
+            <span>{{ consultation.Patient.name }}</span>
+        </div>
+        <div class="product-cell status-cell"><span class="cell-label">Médecin:</span>{{ consultation.Medecin.name }}</div>
+        <div class="product-cell status-cell"><span class="cell-label">Rendez-vous:</span>{{ consultation.Rendezvous.date }}</div>
+        <div class="product-cell sales"><span class="cell-label">Description:</span>{{ consultation.description }}</div>
+        <div class="product-cell sales"><span class="cell-label">Statut:</span>{{ consultation.status }}</div>
+        <div class="product-cell sales"><span class="cell-label">Paiement:</span>{{ consultation.payment }}</div>
+        <div class="product-cell actions">
+            {% if consultation.id %}
+            <a href="{% url 'update_consultation' consultation.id %}" class="btn btn-secondary"><i class="bi bi-save"></i></a>
+            <a href="{% url 'delete_consultation' consultation.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    <a href="{% url 'creer_consultation' %}">Ajouter Consultation</a>
+</div>
+{% endblock %}

@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authapp',
     'hopital',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -77,6 +78,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+LOGIN_URL = 'login' 
 
 
 # Password validation

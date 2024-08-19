@@ -24,3 +24,8 @@ app.use(routes);
 app.listen((PORT = 5000), () =>
     console.log(`Server is on http://localhost:${PORT}`)
 );
+
+/*
+netstat -ano | findstr :8080
+taskkill /PID 1234 /F
+*/

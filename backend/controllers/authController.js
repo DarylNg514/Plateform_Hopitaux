@@ -185,3 +185,141 @@ exports.delete_hopital = async (req, res) => {
         res.status(500).send({ error: "Erreur lors de la suppression de l'hôpital" });
     }
 };
+
+// Create a new user
+exports.creer_user = async (req, res) => {
+    try {
+        const { nom, prenom, telephone, date_de_naissance, adresse, codepostal, email, password, role } = req.body;
+
+        if (!nom || !prenom || !telephone || !date_de_naissance || !adresse || !codepostal || !email || !password || role === undefined) {
+            return res.status(400).send({ error: "Tous les champs sont obligatoires" });
+        }
+
+        if (!validator.isEmail(email)) {
+            return res.status(400).send({ error: "L'email n'est pas valide" });
+        }
+
+        if (!validator.isMobilePhone(telephone, 'en-CA')) {
+            return res.status(400).send({ error: "Le numéro de téléphone n'est pas valide" });
+        }
+
+        if (!validator.isPostalCode(codepostal, 'CA')) {
+            return res.status(400).send({ error: "Le code postal n'est pas valide" });
+        }
+
+        const existingUser = await User.findOne({ $or: [{ email }, { telephone }] });
+        if (existingUser) {
+            return res.status(400).send({ error: "L'email ou le numéro de téléphone est déjà utilisé" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const cleanName = nom.toLowerCase().replace(/[^a-z0-9]/g, '');
+        let identifiant_user;
+        let identifiantExists = true;
+
+        while (identifiantExists) {
+            const randomNumber = Math.floor(Math.random() * 10); // Génère un nombre aléatoire entre 0 et 9
+            identifiant_user = `${cleanName}${randomNumber}`;
+            identifiantExists = await User.findOne({ identifiant: identifiant_user });
+        }
+
+        const user = new User({
+            nom,
+            prenom,
+            identifiant: identifiant_user,
+            telephone,
+            date_de_naissance,
+            adresse,
+            codepostal,
+            email,
+            password: hashedPassword,
+            role
+        });
+
+        await user.save();
+        res.status(201).send({ message: 'Utilisateur créé avec succès', user: { identifiant: identifiant_user, password } });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            error: "Échec de la création de l'utilisateur en raison d'une erreur serveur"
+        });
+    }
+};
+
+// List all users
+exports.lister_users = async (req, res) => {
+    try {
+        const users = await User.find();
+        res.status(200).send(users.map(user => ({
+            id: user._id,
+            nom: user.nom,
+            prenom: user.prenom,
+            telephone: user.telephone,
+            date_de_naissance: user.date_de_naissance,
+            adresse: user.adresse,
+            codepostal: user.codepostal,
+            email: user.email,
+            role: user.role
+        })));
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: "Erreur lors de la récupération des utilisateurs" });
+    }
+};
+
+// Get a user by ID
+exports.get_user = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).send({ error: "Utilisateur non trouvé" });
+        }
+        res.status(200).send(user);
+    } catch (err) {
+        res.status(500).send({ error: "Erreur lors de la récupération de l'utilisateur" });
+    }
+};
+
+// Update a user
+exports.update_user = async (req, res) => {
+    try {
+        const updates = req.body;
+
+        if (updates.email && !validator.isEmail(updates.email)) {
+            return res.status(400).json({ error: "L'email n'est pas valide" });
+        }
+
+        if (updates.telephone && !validator.isMobilePhone(updates.telephone, 'en-CA')) {
+            return res.status(400).json({ error: "Le numéro de téléphone n'est pas valide" });
+        }
+
+        if (updates.codepostal && !validator.isPostalCode(updates.codepostal, 'CA')) {
+            return res.status(400).json({ error: "Le code postal n'est pas valide" });
+        }
+
+        const user = await User.findByIdAndUpdate(req.params.id, updates, { new: true, runValidators: true });
+        if (!user) {
+            return res.status(404).json({ error: "Utilisateur non trouvé" });
+        }
+
+        res.status(200).json(user);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erreur lors de la mise à jour de l'utilisateur" });
+    }
+};
+
+// Delete a user
+exports.delete_user = async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.id);
+        if (!user) {
+            return res.status(404).send({ error: "Utilisateur non trouvé" });
+        }
+
+        res.status(200).send({ message: "Utilisateur supprimé avec succès" });
+    } catch (err) {
+        res.status(500).send({ error: "Erreur lors de la suppression de l'utilisateur" });
+    }
+};

@@ -6,7 +6,7 @@
 	padding: 0;
 }
 body{
-	background: url('http://tfgms.com/sandbox/dailyui/bg-1.jpg') center no-repeat;
+	background: url('https://tse1.mm.bing.net/th?id=OIP.im2U-29ZuqW9rgb82wHg5wHaEK&pid=Api&rs=1&c=1&qlt=95&w=205&h=115') center no-repeat;
 	background-size: cover;
 	color: #333;
 	font-size: 18px;
@@ -29,7 +29,7 @@ body{
 	width: 98%;
 }
 .container:before{
-	background: url('http://tfgms.com/sandbox/dailyui/bg-1.jpg') center no-repeat;
+	background: url('https://tse1.mm.bing.net/th?id=OIP.im2U-29ZuqW9rgb82wHg5wHaEK&pid=Api&rs=1&c=1&qlt=95&w=205&h=115') center no-repeat;
 	background-size: cover;
 	content: '';
 	-webkit-filter: blur(10px);

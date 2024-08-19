@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier Horaire</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+    <link rel="stylesheet" href="{% static 'css/creer.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>
+                <a href="#">
+                    <img src="http://tfgms.com/sandbox/dailyui/logo-1.png" alt="Authentic Collection">
+                </a>
+            </h1>
+        </header>
+        <h1 class="text-center">Modifier Horaire</h1>
+
+        {% if error_message %}
+            <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+
+        <form method="post" action="{% url 'update_horaire' horaire.id %}">
+            {% csrf_token %}
+            <label class="col-one-half">
+                <span class="label-text">Jour</span>
+                <select name="day">
+                    <option value="Monday" {% if horaire.day == 'Monday' %}selected{% endif %}>Lundi</option>
+                    <option value="Tuesday" {% if horaire.day == 'Tuesday' %}selected{% endif %}>Mardi</option>
+                    <option value="Wednesday" {% if horaire.day == 'Wednesday' %}selected{% endif %}>Mercredi</option>
+                    <option value="Thursday" {% if horaire.day == 'Thursday' %}selected{% endif %}>Jeudi</option>
+                    <option value="Friday" {% if horaire.day == 'Friday' %}selected{% endif %}>Vendredi</option>
+                    <option value="Saturday" {% if horaire.day == 'Saturday' %}selected{% endif %}>Samedi</option>
+                    <option value="Sunday" {% if horaire.day == 'Sunday' %}selected{% endif %}>Dimanche</option>
+                </select>
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Heure de début</span>
+                <input type="time" name="start_hour" value="{{ horaire.start_hour }}">
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Heure de fin</span>
+                <input type="time" name="end_hour" value="{{ horaire.end_hour }}">
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Type</span>
+                <select name="type">
+                    <option value="medecin" {% if horaire.type == 'medecin' %}selected{% endif %}>Médecin</option>
+                    <option value="personnel" {% if horaire.type == 'personnel' %}selected{% endif %}>Personnel</option>
+                    <option value="infirmier" {% if horaire.type == 'infirmier' %}selected{% endif %}>Infirmier</option>
+                </select>
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Référence ID</span>
+                <select name="referenceId" class="form-control">
+                    {% for person in people %}
+                        <option value="{{ person.id }}" {% if horaire.referenceId.id == person.id %}selected{% endif %}>{{ person.name }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <div class="text-center">
+                <button class="submit" name="register">Modifier</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

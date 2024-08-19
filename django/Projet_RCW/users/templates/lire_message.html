@@ -1,0 +1,16 @@
+{% extends 'index.html' %}
+{% block content %}
+<style>
+    h1,h2,h3,h4,h5,h6,P, hr {
+        color: white;
+    }
+</style>
+<div class="container">
+    <h1>Lire le Message</h1>
+    <div class="message-details">
+        <p><strong>Contenu:</strong> {{ message.content }}</p>
+        <p><strong>Date:</strong> {{ message.createdAt }}</p>
+        <a href="{% url 'afficher_messages' %}" class="btn btn-secondary">Retour</a>
+    </div>
+</div>
+{% endblock %}

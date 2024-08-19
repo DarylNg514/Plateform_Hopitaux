@@ -33,7 +33,7 @@
             {% csrf_token %}
             <label class="col-one-half">
                 <span class="label-text">Patient</span>
-                <select name="patient">
+                <select name="patient_id" class="form-control">
                     {% for patient in patients %}
                         <option value="{{ patient.id }}">{{ patient.name }}</option>
                     {% endfor %}
@@ -41,7 +41,7 @@
             </label>
             <label class="col-one-half">
                 <span class="label-text">Médecin</span>
-                <select name="medecin">
+                <select name="medecin_id" class="form-control">
                     {% for medecin in medecins %}
                         <option value="{{ medecin.id }}">{{ medecin.name }}</option>
                     {% endfor %}
@@ -49,7 +49,7 @@
             </label>
             <label class="col-one-half">
                 <span class="label-text">Infirmier</span>
-                <select name="infirmier">
+                <select name="infirmier_id" class="form-control">
                     <option value="">Aucun</option>
                     {% for infirmier in infirmiers %}
                         <option value="{{ infirmier.id }}">{{ infirmier.name }}</option>
@@ -58,25 +58,25 @@
             </label>
             <label class="col-one-half">
                 <span class="label-text">Maladie</span>
-                <input type="text" name="disease">
+                <input type="text" name="disease" class="form-control">
             </label>
             <label class="col-one-half">
                 <span class="label-text">Interne</span>
-                <input type="checkbox" name="internal">
+                <input type="checkbox" name="internal" class="form-control">
             </label>
             <label class="col-one-half">
                 <span class="label-text">Date d'ouverture</span>
-                <input type="date" name="openDate">
+                <input type="date" name="openDate" class="form-control">
             </label>
             <label class="col-one-half">
                 <span class="label-text">Statut</span>
-                <select name="status">
+                <select name="status" class="form-control">
                     <option value="open">Ouvert</option>
                     <option value="closed">Fermé</option>
                 </select>
             </label>
             <div class="text-center">
-                <button class="submit" name="register">Enregistrer</button>
+                <button class="submit btn btn-primary" name="register">Enregistrer</button>
             </div>
         </form>
     </div>

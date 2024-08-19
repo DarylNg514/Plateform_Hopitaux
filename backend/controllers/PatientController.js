@@ -1,4 +1,4 @@
-const { Patient } = require('../database/models/User');
+const { Patient, Consultation, Dossier, Rendezvous, Hopital } = require('../database/models/User');
 const validator = require('validator');
 const bcrypt = require('bcrypt');  // Assurez-vous que bcrypt est bien importé
 
@@ -44,6 +44,38 @@ exports.createPatient = async (req, res) => {
         res.status(500).json({ error: "Échec de la création du patient" });
     }
 };
+
+
+// Lire tous les patients d'un hôpital par ID d'hôpital
+exports.getAllPatientsByHopitalId = async (req, res) => {
+    try {
+        const hopitalId = req.params.hopitalId;
+
+        if (!hopitalId) {
+            return res.status(400).json({ error: "L'ID de l'hôpital est requis" });
+        }
+
+        const patients = await Patient.find({ Hopital: hopitalId }).populate('Hopital');
+
+        const formattedPatients = patients.map(patient => ({
+            id: patient._id,
+            name: patient.name,
+            email: patient.email,
+            phone: patient.phone,
+            address: patient.address,
+            Hopital: patient.Hopital,
+            role: patient.role,
+            createdAt: patient.createdAt,
+            updatedAt: patient.updatedAt
+        }));
+
+        res.status(200).json(formattedPatients || []);
+    } catch (err) {
+        res.status(500).json({ error: "Erreur lors de la récupération des patients" });
+    }
+};
+
+
 
 // Lire tous les patients
 exports.getAllPatients = async (req, res) => {
@@ -118,5 +150,118 @@ exports.deletePatient = async (req, res) => {
         res.status(200).json({ message: "Patient supprimé avec succès" });
     } catch (err) {
         res.status(500).json({ error: "Erreur lors de la suppression du patient" });
+    }
+};
+
+// Lire les consultations d'un patient par ID
+exports.getConsultationByPatient = async (req, res) => {
+    try {
+        const patientId = req.params.id;
+        const consultations = await Consultation.find({ Patient: patientId }).populate('Medecin').populate('Rendezvous').populate('Hopital');
+
+        if (!consultations) {
+            return res.status(404).json({ error: "Aucune consultation trouvée pour ce patient" });
+        }
+
+        const formattedConsultations = consultations.map(consultation => ({
+            id: consultation._id,
+            Medecin: consultation.Medecin,
+            Patient: consultation.Patient,
+            description: consultation.description,
+            Rendezvous: consultation.Rendezvous,
+            status: consultation.status,
+            payment: consultation.payment,
+            Hopital: consultation.Hopital,
+            createdAt: consultation.createdAt,
+            updatedAt: consultation.updatedAt
+        }));
+
+        res.status(200).json(formattedConsultations);
+    } catch (err) {
+        console.error('Erreur lors de la récupération des consultations :', err);  // Debugging log
+        res.status(500).json({ error: "Erreur lors de la récupération des consultations" });
+    }
+};
+
+// Lire les dossiers d'un patient par ID
+exports.getDossierByPatient = async (req, res) => {
+    try {
+        const patientId = req.params.id;
+        const dossiers = await Dossier.find({ Patient: patientId }).populate('Medecin').populate('Infirmier').populate('Hopital');
+
+        if (!dossiers) {
+            return res.status(404).json({ error: "Aucun dossier trouvé pour ce patient" });
+        }
+
+        const formattedDossiers = dossiers.map(dossier => ({
+            id: dossier._id,
+            Patient: dossier.Patient,
+            Medecin: dossier.Medecin,
+            Infirmier: dossier.Infirmier,
+            disease: dossier.disease,
+            internal: dossier.internal,
+            openDate: dossier.openDate,
+            status: dossier.status,
+            Hopital: dossier.Hopital,
+            createdAt: dossier.createdAt,
+            updatedAt: dossier.updatedAt
+        }));
+
+        res.status(200).json(formattedDossiers);
+    } catch (err) {
+        console.error('Erreur lors de la récupération des dossiers :', err);  // Debugging log
+        res.status(500).json({ error: "Erreur lors de la récupération des dossiers" });
+    }
+};
+
+// Lire les rendez-vous d'un patient par ID
+exports.getRendezvousByPatient = async (req, res) => {
+    try {
+        const patientId = req.params.id;
+        const rendezvous = await Rendezvous.find({ Patient: patientId }).populate('Patient').populate('Medecin');
+
+        if (!rendezvous) {
+            return res.status(404).json({ error: "Aucun rendez-vous trouvé pour ce patient" });
+        }
+
+        const formattedRendezvous = rendezvous.map(rdv => ({
+            id: rdv._id,
+            Medecin: rdv.Medecin,
+            Patient: rdv.Patient,
+            date: rdv.date,
+            heures: rdv.heures,
+            description: rdv.description,
+            createdAt: rdv.createdAt,
+            updatedAt: rdv.updatedAt
+        }));
+
+        res.status(200).json(formattedRendezvous);
+    } catch (err) {
+        console.error('Erreur lors de la récupération des rendez-vous :', err);  // Debugging log
+        res.status(500).json({ error: "Erreur lors de la récupération des rendez-vous" });
+    }
+};
+
+// Déplacer un patient vers un nouvel hôpital
+exports.deplacerPatient = async (req, res) => {
+    try {
+        const { patientId, newHopitalId } = req.body;
+
+        if (!patientId || !newHopitalId) {
+            return res.status(400).json({ error: "Les champs patientId et newHopitalId sont obligatoires" });
+        }
+
+        const patient = await Patient.findById(patientId);
+        if (!patient) {
+            return res.status(404).json({ error: "Patient non trouvé" });
+        }
+
+        patient.Hopital = newHopitalId;
+        await patient.save();
+
+        res.status(200).json({ message: "Patient déplacé avec succès" });
+    } catch (err) {
+        console.error('Erreur lors du déplacement du patient :', err);
+        res.status(500).json({ error: "Erreur lors du déplacement du patient" });
     }
 };

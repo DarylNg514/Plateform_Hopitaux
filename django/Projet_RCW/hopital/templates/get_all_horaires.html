@@ -1,0 +1,33 @@
+{% extends 'index.html' %}
+{% block content %}
+{% load static %}
+<div class="products-area-wrapper tableView">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    <div class="products-header">
+      <div class="product-cell image">Jour<button class="sort-button"></button></div>
+      <div class="product-cell category">Heure de début<button class="sort-button"></button></div>
+      <div class="product-cell status-cell">Heure de fin<button class="sort-button"></button></div>
+      <div class="product-cell sales">Type<button class="sort-button"></button></div>
+      <div class="product-cell sales">Référence<button class="sort-button"></button></div>
+      <div class="product-cell sales">Action<button class="sort-button"></button></div>
+    </div>
+    {% for horaire in horaires %}
+    <div class="products-row">
+        <div class="product-cell image"><span>{{ horaire.day }}</span></div>
+        <div class="product-cell category"><span class="cell-label">Heure de début:</span>{{ horaire.start_hour }}</div>
+        <div class="product-cell status-cell"><span class="cell-label">Heure de fin:</span>{{ horaire.end_hour }}</div>
+        <div class="product-cell sales"><span class="cell-label">Type:</span>{{ horaire.type }}</div>
+        <div class="product-cell sales"><span class="cell-label">Référence:</span>{{ horaire.referenceId.name }}</div>
+        <div class="product-cell actions">
+            <a href="{% url 'update_horaire' horaire.id %}" class="btn btn-secondary">Modifier</a>
+            <a href="{% url 'delete_horaire' horaire.id %}" class="btn btn-danger">Supprimer</a>
+        </div>
+    </div>
+    {% endfor %}
+    <a href="{% url 'creer_horaire' %}">Ajouter Horaire</a>
+</div>
+{% endblock %}

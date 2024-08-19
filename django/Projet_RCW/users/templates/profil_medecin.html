@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+{% block content %}
+{% load static %}
+<div class="products-area-wrapper tableView">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    <div class="products-header">
+        <div class="product-cell image">Médecins<button class="sort-button"></button></div>
+        <div class="product-cell category">Email<button class="sort-button"></button></div>
+        <div class="product-cell status-cell">Adresse<button class="sort-button"></button></div>
+        <div class="product-cell sales">Téléphone<button class="sort-button"></button></div>
+        <div class="product-cell sales">Spécialité<button class="sort-button"></button></div>
+        <div class="product-cell sales">Disponibilité<button class="sort-button"></button></div>
+        <div class="product-cell sales">Action<button class="sort-button"></button></div>
+    </div>
+    <div class="products-row">
+        <button class="cell-more-button"></button>
+        <div class="product-cell image">
+            <img src="https://cdn.pixabay.com/photo/2016/03/31/20/12/doctor-1295581_1280.png" alt="product">
+            <span>{{ medecin.name }}</span>
+        </div>
+        <div class="product-cell category"><span class="cell-label">Email:</span>{{ medecin.email }}</div>
+        <div class="product-cell status-cell"><span class="cell-label">Adresse:</span>{{ medecin.address }}</div>
+        <div class="product-cell sales"><span class="cell-label">Téléphone:</span>{{ medecin.phone }}</div>
+        <div class="product-cell sales"><span class="cell-label">Spécialité:</span>{{ medecin.specialty }}</div>
+        <div class="product-cell sales">
+            <span class="cell-label">Disponibilité:</span>
+            <ul>
+                {% for availability in medecin.availability %}
+                    <li>{{ availability.day }}: {{ availability.hours }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="product-cell actions">
+            <a href="{% url 'update_current_medecin' %}" class="btn btn-secondary"><i class="bi bi-save"></i></a>
+        </div>
+    </div>
+</div>
+{% endblock %}
