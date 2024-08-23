@@ -1,0 +1,116 @@
+{% extends 'index.html' %}
+{% block content %}
+{% load static %}
+<style>
+    h2, hr {
+        color: white;
+    }
+</style>
+<div class="products-area-wrapper tableView">
+    
+    <h2>Messages Reçus</h2>
+    
+    <div class="products-header">
+        <div class="product-cell category">Expéditeur</div>
+        <div class="product-cell sales">Date</div>
+        <div class="product-cell sales">Action</div>
+    </div>
+    {% if page_obj_received %}
+        {% if page_obj_received.object_list|length > 0 %}
+            {% for message in page_obj_received %}
+                <div class="products-row" style="background-color: {% if not message.isRead %}lightgreen{% endif %};">
+                    <div class="product-cell category">
+                        <span class="cell-label">Expéditeur:</span>
+                        {% if message.sender %}
+                            {% if message.sender.nom %}
+                                {{ message.sender.nom }}
+                            {% elif message.sender.nom_hopital %}
+                                {{ message.sender.nom_hopital }}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="product-cell sales"><span class="cell-label">Date:</span>{{ message.createdAt }}</div>
+                    <div class="product-cell actions">
+                        <a href="{% url 'lire_message' message.id %}" class="btn btn-primary">Lire</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning">Aucun message reçu.</div>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-warning">Aucun message reçu.</div>
+    {% endif %}
+    
+    <!-- Pagination pour les messages reçus -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj_received.has_previous %}
+                <a href="?page_received=1">&laquo; first</a>
+                <a href="?page_received={{ page_obj_received.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj_received.number }} de {{ page_obj_received.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj_received.has_next %}
+                <a href="?page_received={{ page_obj_received.next_page_number }}">next</a>
+                <a href="?page_received={{ page_obj_received.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+    <br>
+    <hr><hr><br>
+    <h2>Messages Envoyés</h2>
+    <div class="products-header">
+        <div class="product-cell category">Destinataire</div>
+        <div class="product-cell sales">Date</div>
+    </div>
+    {% if page_obj_sent %}
+        {% if page_obj_sent.object_list|length > 0 %}
+            {% for message in page_obj_sent %}
+                <div class="products-row">
+                    <div class="product-cell category">
+                        <span class="cell-label">Destinataire:</span>
+                        {% if message.receiver %}
+                            {% if message.receiver.nom and message.receiver.prenom %}
+                                {{ message.receiver.nom }} {{ message.receiver.prenom }}
+                            {% elif message.receiver.nom_hopital %}
+                                {{ message.receiver.nom_hopital }}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="product-cell sales"><span class="cell-label">Date:</span>{{ message.createdAt }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning">Aucun message envoyé.</div>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-warning">Aucun message envoyé.</div>
+    {% endif %}
+    
+    <!-- Pagination pour les messages envoyés -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj_sent.has_previous %}
+                <a href="?page_sent=1">&laquo; first</a>
+                <a href="?page_sent={{ page_obj_sent.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj_sent.number }} de {{ page_obj_sent.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj_sent.has_next %}
+                <a href="?page_sent={{ page_obj_sent.next_page_number }}">next</a>
+                <a href="?page_sent={{ page_obj_sent.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+    <a href="{% url 'envoyer_message' %}" class="btn btn-success">Nouveau Message</a>
+</div>
+{% endblock %}

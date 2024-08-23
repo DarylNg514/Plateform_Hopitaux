@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier Emploi du Temps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/horaire.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Modifier Emploi du Temps</h1>
+        </header>
+
+        {% if error_message %}
+            <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            {% for day, schedules in planning.items %}
+                <h2>{{ day }}</h2>
+                <table class="table">
+                    <thead>
+                        <tr><!DOCTYPE html>
+                            <html>
+                            <head>
+                                <meta charset="UTF-8">
+                                <title>Modifier Horaire</title>
+                                <meta name="viewport" content="width=device-width, initial-scale=1">
+                                {% load static %}
+                                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+                                <link rel="stylesheet" href="{% static 'css/creer.css' %}">
+                            </head>
+                            <body>
+                                <div class="container">
+                                    <h1 class="text-center">Modifier Horaire</h1>
+                            
+                                    {% if error_message %}
+                                        <div class="alert alert-danger">{{ error_message }}</div>
+                                    {% endif %}
+                            
+                                    <form method="post" action="{% url 'update_horaire' horaire.id %}">
+                                        {% csrf_token %}
+                                        <label class="col-one-half">
+                                            <span class="label-text">Type</span>
+                                            <select name="type" id="type" class="form-control">
+                                                <option value="medecin" {% if horaire.type == 'medecin' %}selected{% endif %}>Médecin</option>
+                                                <option value="infirmier" {% if horaire.type == 'infirmier' %}selected{% endif %}>Infirmier</option>
+                                                <option value="personnel" {% if horaire.type == 'personnel' %}selected{% endif %}>Personnel</option>
+                                            </select>
+                                        </label>
+                                        <label class="col-one-half">
+                                            <span class="label-text">Personne</span>
+                                            <select name="referenceId" id="referenceId" class="form-control">
+                                                <!-- Options seront ajoutées par JavaScript -->
+                                            </select>
+                                        </label>
+                                        <label class="col-one-half">
+                                            <span class="label-text">Jour</span>
+                                            <select name="day" id="day" class="form-control">
+                                                <!-- Options seront ajoutées par JavaScript -->
+                                            </select>
+                                        </label>
+                                        <label class="col-one-half">
+                                            <span class="label-text">Heure de début</span>
+                                            <select name="start_hour" id="start_hour" class="form-control">
+                                                <!-- Options seront ajoutées par JavaScript -->
+                                            </select>
+                                        </label>
+                                        <label class="col-one-half">
+                                            <span class="label-text">Heure de fin</span>
+                                            <select name="end_hour" id="end_hour" class="form-control">
+                                                <!-- Options seront ajoutées par JavaScript -->
+                                            </select>
+                                        </label>
+                                        <div class="text-center">
+                                            <button class="submit" name="register">Modifier</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+                                <script>
+                                    $(document).ready(function() {
+                                        const medecins = {{ medecins|safe }};
+                                        const infirmiers = {{ infirmiers|safe }};
+                                        const personnels = {{ personnels|safe }};
+                                        
+                                        $('#type').change(function() {
+                                            const type = $(this).val();
+                                            let options = '';
+                                            if (type === 'medecin') {
+                                                medecins.forEach(medecin => {
+                                                    options += `<option value="${medecin.id}">${medecin.name}</option>`;
+                                                });
+                                            } else if (type === 'infirmier') {
+                                                infirmiers.forEach(infirmier => {
+                                                    options += `<option value="${infirmier.id}">${infirmier.name}</option>`;
+                                                });
+                                            } else if (type === 'personnel') {
+                                                personnels.forEach(personnel => {
+                                                    options += `<option value="${personnel.id}">${personnel.name}</option>`;
+                                                });
+                                            }
+                                            $('#referenceId').html(options).val('{{ horaire.referenceId }}').trigger('change');
+                                        }).trigger('change');
+                            
+                                        $('#referenceId').change(function() {
+                                            const type = $('#type').val();
+                                            const id = $(this).val();
+                                            let availability = [];
+                                            if (type === 'medecin') {
+                                                availability = medecins.find(m => m.id === id).availability;
+                                            } else if (type === 'infirmier') {
+                                                availability = infirmiers.find(i => i.id === id).availability;
+                                            } else if (type === 'personnel') {
+                                                availability = personnels.find(p => p.id === id).availability;
+                                            }
+                                            
+                                            let days = '';
+                                            let hours = '';
+                                            availability.forEach(a => {
+                                                days += `<option value="${a.day}" {% if a.day == horaire.day %}selected{% endif %}>${a.day}</option>`;
+                                                const [start, end] = a.hours.split('-');
+                                                hours += `<option value="${start}" {% if start == horaire.start_hour %}selected{% endif %}>${start}</option>`;
+                                                hours += `<option value="${end}" {% if end == horaire.end_hour %}selected{% endif %}>${end}</option>`;
+                                            });
+                                            $('#day').html(days);
+                                            $('#start_hour').html(hours);
+                                            $('#end_hour').html(hours);
+                                        });
+                                    });
+                                </script>
+                            </body>
+                            </html>
+                            
+                            <th>Nom</th>
+                            <th>Rôle</th>
+                            <th>Heure de début</th>
+                            <th>Heure de fin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for schedule in schedules %}
+                            <tr>
+                                <td>{{ schedule.name }}</td>
+                                <td>{{ schedule.role }}</td>
+                                <td>
+                                    <input type="hidden" name="availability" value="{{ schedule.id }},{{ day }},{{ schedule.hours.split('-')[0] }},{{ schedule.hours.split('-')[1] }}">
+                                    <select name="start_hour">
+                                        {% for hour in "00:00,01:00,02:00,03:00,04:00,05:00,06:00,07:00,08:00,09:00,10:00,11:00,12:00,13:00,14:00,15:00,16:00,17:00,18:00,19:00,20:00,21:00,22:00,23:00".split(',') %}
+                                            <option value="{{ hour }}" {% if hour == schedule.hours.split('-')[0] %}selected{% endif %}>{{ hour }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="end_hour">
+                                        {% for hour in "00:00,01:00,02:00,03:00,04:00,05:00,06:00,07:00,08:00,09:00,10:00,11:00,12:00,13:00,14:00,15:00,16:00,17:00,18:00,19:00,20:00,21:00,22:00,23:00".split(',') %}
+                                            <option value="{{ hour }}" {% if hour == schedule.hours.split('-')[1] %}selected{% endif %}>{{ hour }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endfor %}
+            <div class="text-center">
+                <button class="submit" name="update">Mettre à jour</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

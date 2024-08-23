@@ -1,0 +1,49 @@
+{% extends 'index.html' %}
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Emploi du Temps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/horaire.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Emploi du Temps</h1>
+        </header>
+
+        {% if error_message %}
+            <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+
+        {% for day, schedules in planning.items %}
+            <h2>{{ day }}</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Rôle</th>
+                        <th>Heures</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for schedule in schedules %}
+                        <tr>
+                            <td>{{ schedule.name }}</td>
+                            <td>{{ schedule.role }}</td>
+                            <td>{{ schedule.hours }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+        
+        <a href="{% url 'modifier_horaire' %}">modifier horaire</a>
+    </div>
+</body>
+</html>
+{% endblock %}

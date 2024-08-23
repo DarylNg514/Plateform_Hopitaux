@@ -1,0 +1,146 @@
+name: Build and deploy Fullstack app to Azure Web App - hopital
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build_backend:
+    runs-on: ubuntu-latest
+    name: Build and zip Node.js backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js version
+        uses: actions/setup-node@v5
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm install
+      
+      - name: Build backend
+        run: |
+          cd backend
+          npm run build # Si votre projet nécessite un build
+
+      - name: Zip backend for deployment
+        run: |
+          cd backend
+          zip -r ../backend.zip ./*
+
+      - name: Upload backend artifact for deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-app
+          path: backend.zip
+
+  build_frontend:
+    runs-on: ubuntu-latest
+    name: Build and zip Django frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python version
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Create and start virtual environment
+        run: |
+          cd django
+          python -m venv venv
+          source venv/bin/activate
+      
+      - name: Install dependencies
+        run: |
+          cd django
+          pip install -r requirements.txt
+        
+      - name: Collect static files
+        run: |
+          cd django
+          python manage.py collectstatic --noinput
+
+      - name: Zip frontend for deployment
+        run: |
+          cd django
+          zip -r ../frontend.zip ./* -x 'venv/*'
+
+      - name: Upload frontend artifact for deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-app
+          path: frontend.zip
+
+  deploy_backend:
+    runs-on: ubuntu-latest
+    needs: build_backend
+    name: Deploy Node.js backend
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-backend.outputs.webapp-url }}
+    permissions:
+      id-token: write #This is required for requesting the JWT
+
+    steps:
+      - name: Download backend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-app
+
+      - name: Unzip backend artifact
+        run: unzip backend.zip
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
+
+      - name: 'Deploy Node.js backend to Azure Web App'
+        uses: azure/webapps-deploy@v3
+        id: deploy-to-backend
+        with:
+          app-name: 'hopital-backend'  # Nom de l'application backend sur Azure
+          slot-name: 'Production'
+
+  deploy_frontend:
+    runs-on: ubuntu-latest
+    needs: build_frontend
+    name: Deploy Django frontend
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-frontend.outputs.webapp-url }}
+    permissions:
+      id-token: write #This is required for requesting the JWT
+
+    steps:
+      - name: Download frontend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-app
+
+      - name: Unzip frontend artifact
+        run: unzip frontend.zip
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
+
+      - name: 'Deploy Django frontend to Azure Web App'
+        uses: azure/webapps-deploy@v3
+        id: deploy-to-frontend
+        with:
+          app-name: 'hopital-frontend'  # Nom de l'application frontend sur Azure
+          slot-name: 'Production'

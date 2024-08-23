@@ -1,0 +1,59 @@
+Name,Office Address,Phone Number,Years of Experience,Med School,Speciality
+Dr. Johnson,456 Elm St,555-0104,22,Med University B,Psoriasis
+Dr. Garcia,101 Maple Ave,555-0103,20,Med University B,Psoriasis
+Dr. Johnson,789 Oak St,555-0100,13,Med University B,Varicose Veins
+Dr. Brown,123 Main St,555-0103,8,Med University B,Varicose Veins
+Dr. Miller,404 Cedar Ln,555-0105,20,Med University B,Typhoid
+Dr. Garcia,202 Pine Ave,555-0105,22,Med University E,Typhoid
+Dr. Miller,456 Elm St,555-0100,23,Med University A,Typhoid
+Dr. Williams,404 Cedar Ln,555-0106,17,Med University C,Chicken pox
+Dr. Smith,456 Elm St,555-0103,24,Med University B,Chicken pox
+Dr. Garcia,456 Elm St,555-0105,11,Med University E,Impetigo
+Dr. Brown,789 Oak St,555-0105,17,Med University A,Impetigo
+Dr. Jones,303 Birch Blvd,555-0105,8,Med University A,Dengue
+Dr. Jones,202 Pine Ave,555-0104,8,Med University A,Dengue
+Dr. Williams,303 Birch Blvd,555-0102,16,Med University C,Dengue
+Dr. Brown,123 Main St,555-0104,21,Med University E,Fungal infection
+Dr. Garcia,202 Pine Ave,555-0103,24,Med University A,Fungal infection
+Dr. Brown,789 Oak St,555-0106,16,Med University B,Fungal infection
+Dr. Williams,123 Main St,555-0100,11,Med University E,Common Cold
+Dr. Johnson,404 Cedar Ln,555-0100,25,Med University C,Common Cold
+Dr. Miller,101 Maple Ave,555-0103,25,Med University D,Common Cold
+Dr. Brown,456 Elm St,555-0102,25,Med University B,Pneumonia
+Dr. Smith,303 Birch Blvd,555-0106,23,Med University E,Pneumonia
+Dr. Johnson,202 Pine Ave,555-0104,9,Med University B,Pneumonia
+Dr. Johnson,202 Pine Ave,555-0101,14,Med University D,Dimorphic Hemorrhoids
+Dr. Jones,303 Birch Blvd,555-0103,13,Med University B,Dimorphic Hemorrhoids
+Dr. Smith,404 Cedar Ln,555-0102,22,Med University C,Arthritis
+Dr. Garcia,101 Maple Ave,555-0102,18,Med University D,Arthritis
+Dr. Garcia,123 Main St,555-0104,23,Med University C,Acne
+Dr. Johnson,202 Pine Ave,555-0101,7,Med University A,Acne
+Dr. Garcia,404 Cedar Ln,555-0102,20,Med University A,Bronchial Asthma
+Dr. Johnson,789 Oak St,555-0104,8,Med University C,Bronchial Asthma
+Dr. Smith,404 Cedar Ln,555-0100,6,Med University E,Bronchial Asthma
+Dr. Jones,303 Birch Blvd,555-0101,18,Med University C,Hypertension
+Dr. Jones,789 Oak St,555-0101,7,Med University E,Hypertension
+Dr. Miller,789 Oak St,555-0106,14,Med University D,Hypertension
+Dr. Brown,101 Maple Ave,555-0105,16,Med University D,Migraine
+Dr. Smith,101 Maple Ave,555-0102,11,Med University E,Migraine
+Dr. Jones,101 Maple Ave,555-0102,11,Med University A,Cervical spondylosis
+Dr. Garcia,202 Pine Ave,555-0100,24,Med University A,Cervical spondylosis
+Dr. Smith,123 Main St,555-0101,17,Med University B,Jaundice
+Dr. Johnson,303 Birch Blvd,555-0102,21,Med University E,Jaundice
+Dr. Johnson,404 Cedar Ln,555-0105,8,Med University D,Malaria
+Dr. Brown,101 Maple Ave,555-0100,19,Med University A,Malaria
+Dr. Johnson,404 Cedar Ln,555-0103,23,Med University B,urinary tract infection
+Dr. Brown,789 Oak St,555-0102,19,Med University B,urinary tract infection
+Dr. Smith,123 Main St,555-0103,8,Med University E,urinary tract infection
+Dr. Smith,303 Birch Blvd,555-0104,16,Med University B,allergy
+Dr. Johnson,101 Maple Ave,555-0105,5,Med University C,allergy
+Dr. Smith,123 Main St,555-0103,17,Med University E,allergy
+Dr. Jones,456 Elm St,555-0105,8,Med University B,gastroesophageal reflux disease
+Dr. Garcia,101 Maple Ave,555-0100,7,Med University A,gastroesophageal reflux disease
+Dr. Smith,202 Pine Ave,555-0103,20,Med University E,gastroesophageal reflux disease
+Dr. Jones,303 Birch Blvd,555-0101,5,Med University C,drug reaction
+Dr. Smith,456 Elm St,555-0103,22,Med University D,drug reaction
+Dr. Garcia,101 Maple Ave,555-0106,23,Med University C,peptic ulcer disease
+Dr. Jones,789 Oak St,555-0104,13,Med University A,peptic ulcer disease
+Dr. Jones,101 Maple Ave,555-0102,16,Med University B,diabetes
+Dr. Garcia,101 Maple Ave,555-0103,15,Med University A,diabetes

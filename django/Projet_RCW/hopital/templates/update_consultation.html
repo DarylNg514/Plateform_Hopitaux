@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier Consultation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+    <link rel="stylesheet" href="{% static 'css/creer.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>
+                <a href="#">
+                    <img src="http://tfgms.com/sandbox/dailyui/logo-1.png" alt="Authentic Collection">
+                </a>
+            </h1>
+        </header>
+        <h1 class="text-center">Modifier Consultation</h1>
+
+        {% if error_message %}
+            <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <label class="col-one-half">
+                <span class="label-text">Rendez-vous</span>
+                <select name="rendezvous_id" class="form-control">
+                    {% for rv in rendezvous %}
+                        <option value="{{ rv.id }}" {% if consultation.Rendezvous.id == rv.id %}selected{% endif %}>{{ rv.date }} - {{ rv.heures }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Description</span>
+                <input type="text" name="description" value="{{ consultation.description }}" class="form-control">
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Statut</span>
+                <select name="status" class="form-control">
+                    <option value="pending" {% if consultation.status == 'pending' %}selected{% endif %}>En attente</option>
+                    <option value="completed" {% if consultation.status == 'completed' %}selected{% endif %}>Complété</option>
+                </select>
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Paiement</span>
+                <input type="checkbox" name="payment" {% if consultation.payment %}checked{% endif %} class="form-control">
+            </label>
+            <div class="text-center">
+                <button class="submit btn btn-primary" name="register">Modifier</button>
+            </div>
+        </form>
+    </div>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script src="{% static 'js/index.js' %}"></script>
+</body>
+</html>

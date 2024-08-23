@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Créer Lit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+    <link rel="stylesheet" href="{% static 'css/creer.css' %}">
+    <script>
+        function updateAvailability() {
+            const patientSelect = document.getElementById('patientSelect');
+            const availabilityCheckbox = document.getElementById('availabilityCheckbox');
+            if (patientSelect.value) {
+                availabilityCheckbox.checked = false;
+                availabilityCheckbox.disabled = true;
+            } else {
+                availabilityCheckbox.checked = true;
+                availabilityCheckbox.disabled = false;
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>
+                <a href="#">
+                    <img src="http://tfgms.com/sandbox/dailyui/logo-1.png" alt="Authentic Collection">
+                </a>
+            </h1>
+        </header>
+        <h1 class="text-center">Créer Lit</h1>
+
+        {% if error_message %}
+            <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+
+        <form method="post" action="{% url 'creer_lit' %}">
+            {% csrf_token %}
+            <label class="col-one-half">
+                <span class="label-text">Numéro de Lit</span>
+                <input type="text" name="bedNumber" class="form-control">
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Patient</span>
+                <select id="patientSelect" name="patient_id" class="form-control" onchange="updateAvailability()">
+                    <option value="">Aucun</option>
+                    {% for patient in patients %}
+                        <option value="{{ patient.id }}">{{ patient.name }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Département</span>
+                <select name="department_id" class="form-control">
+                    {% for department in departments %}
+                        <option value="{{ department.id }}">{{ department.name }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Disponible</span>
+                <input type="checkbox" id="availabilityCheckbox" name="isAvailable" class="form-control" checked>
+            </label>
+            <div class="text-center">
+                <button class="submit btn btn-primary" name="register">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script src="{% static 'js/index.js' %}"></script>
+</body>
+</html>

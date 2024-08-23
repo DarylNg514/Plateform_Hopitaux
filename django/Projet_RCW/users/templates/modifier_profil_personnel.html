@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier Personnel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/creer.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="#"><img src="http://tfgms.com/sandbox/dailyui/logo-1.png" alt="Authentic Collection"></a></h1>
+        </header>
+        <h1 class="text-center">Modifier Personnel</h1>
+
+        {% if error_message %}
+            <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+
+        <form class="registration-form" method="POST">
+            {% csrf_token %}
+            <label class="col-one-half">
+                <span class="label-text">Nom</span>
+                <input type="text" name="name" value="{{ personnel.name }}">
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Email</span>
+                <input type="email" name="email" value="{{ personnel.email }}">
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Téléphone</span>
+                <input type="text" name="phone" value="{{ personnel.phone }}">
+            </label>
+            <label class="col-one-half">
+                <span class="label-text">Adresse</span>
+                <input type="text" name="address" value="{{ personnel.address }}">
+            </label>
+
+            <div class="text-center">
+                <button class="submit" name="register">Modifier</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
